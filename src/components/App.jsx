@@ -1,31 +1,32 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import SearchBar from "./SearchBar/SearchBar";
-import axios from "axios";
+import { fetchPictures } from "./Api/Api";
+import ImageGallery from "./ImageGallery/ImageGallery";
 
 function App() {
   const [pictures, setPictures] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState("");
   useEffect(() => {
     const getData = async () => {
-      const { data } = await axios.get(
-        "https://hn.algolia.com/api/v1/search?query=react"
-      );
-      console.log(data.hits);
-      setPictures(data.hits);
+      try {
+        setIsLoading(true);
+        const data = await fetchPictures(query, page);
+        setIsLoading(false);
+        setPictures(data);
+      } catch (error) {
+        console.log("error", error);
+      }
     };
     getData();
-  }, []);
+  }, [query, page]);
   return (
     <>
       <SearchBar />
-      <ul>
-        {" "}
-        {pictures.map((item) => (
-          <li key={item.objectID}>
-            <a href={item.url}> {item.title}</a>
-          </li>
-        ))}
-      </ul>
+      {!!pictures.length && <ImageGallery pictures={pictures} />}
+      {isLoading && <h2>Loading...</h2>}
     </>
   );
 }
