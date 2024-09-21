@@ -1,5 +1,7 @@
 import axios from "axios";
 
+// https://api.unsplash.com/search/photos?page=1&query=office
+
 const BASE_URL = "https://api.unsplash.com/search/photos";
 const ACCESS_KEY = "jwVCJI0N_zw5LuVuX1p6Gjswiefo7xOd2WCvT7ETsD0";
 export const fetchPictures = async (query, page = 1) => {
