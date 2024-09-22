@@ -5,6 +5,7 @@ import { fetchPictures } from "./Api/Api";
 import ImageGallery from "./ImageGallery/ImageGallery";
 import toast, { Toaster } from "react-hot-toast";
 import ImageModal from "./ImageModal/ImageModal";
+import Loader from "./Loader/Loader";
 
 function App() {
   const [pictures, setPictures] = useState([]);
@@ -13,6 +14,7 @@ function App() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [selectedPicture, setSelectedPicture] = useState("");
+  const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -26,6 +28,7 @@ function App() {
         setIsError(true);
       } finally {
         setIsLoading(false);
+        setLoadingMore(false);
       }
     };
     getData();
@@ -50,7 +53,10 @@ function App() {
 
   return (
     <>
-      <SearchBar onSubmit={handleSearchSubmit} />
+      <header>
+        <SearchBar onSubmit={handleSearchSubmit} />
+      </header>
+      {isLoading && !loadingMore && <Loader />}
       {!!pictures.length && (
         <ImageGallery pictures={pictures} onPictureClick={handlePictureClick} />
       )}

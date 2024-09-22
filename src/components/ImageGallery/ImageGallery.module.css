@@ -1,5 +1,6 @@
 .gallery {
   display: flex;
+  /* color: #9b79c2; */
 }
 .galleryItem {
   align-items: center;
