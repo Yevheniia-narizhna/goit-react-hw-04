@@ -4,6 +4,7 @@ import SearchBar from "./SearchBar/SearchBar";
 import { fetchPictures } from "./Api/Api";
 import ImageGallery from "./ImageGallery/ImageGallery";
 import toast, { Toaster } from "react-hot-toast";
+import ImageModal from "./ImageModal/ImageModal";
 
 function App() {
   const [pictures, setPictures] = useState([]);
@@ -11,6 +12,7 @@ function App() {
   const [isError, setIsError] = useState(false);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
+  const [selectedPicture, setSelectedPicture] = useState("");
 
   useEffect(() => {
     const getData = async () => {
@@ -19,7 +21,7 @@ function App() {
         setIsLoading(true);
         const data = await fetchPictures(query, page);
         setIsLoading(false);
-        setPictures(data);
+        setPictures((prev) => [...prev, ...data.results]);
       } catch {
         setIsError(true);
       } finally {
@@ -28,17 +30,36 @@ function App() {
     };
     getData();
   }, [query, page]);
+
+  const handlePictureClick = (picture) => {
+    setSelectedPicture(picture);
+  };
+
   const handleLoadMore = () => {
     setLoadingMore(true);
-    setPage((prevPage) => prevPage + 1);
+    setPage((prev) => prev + 1);
   };
+  const handleSearchSubmit = (query) => {
+    setQuery(query);
+    setPage(1);
+    setPictures([]);
+  };
+  const handleCloseModal = () => {
+    setSelectedPicture(null);
+  };
+
   return (
     <>
-      <SearchBar />
-      {!!pictures.length && <ImageGallery pictures={pictures} />}
+      <SearchBar onSubmit={handleSearchSubmit} />
+      {!!pictures.length && (
+        <ImageGallery pictures={pictures} onPictureClick={handlePictureClick} />
+      )}
       {isLoading && <h2>Loading...</h2>}
       {isError && <h2>Something went wrong</h2>}
       <button onClick={handleLoadMore}>Load more</button>
+      {selectedPicture && (
+        <ImageModal picture={selectedPicture} onClose={handleCloseModal} />
+      )}
     </>
   );
 }

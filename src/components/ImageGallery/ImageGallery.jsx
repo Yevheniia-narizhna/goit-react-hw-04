@@ -1,4 +1,6 @@
-export default function ImageGallery({ pictures }) {
+import s from "./ImageGallery.module.css";
+import ImageCard from "../ImageCard/ImageCard";
+export default function ImageGallery({ pictures, onPictureClick }) {
   return (
     <div className={s.gallery}>
       {pictures.map((picture) => (
