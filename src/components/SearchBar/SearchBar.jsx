@@ -1,8 +1,10 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import s from "./SearchBar.module.css";
 
 export default function SearchBar({ onSubmit }) {
   const [query, setQuery] = useState("");
+
   const handleInput = (event) => {
     setQuery(event.target.value);
   };
@@ -19,8 +21,9 @@ export default function SearchBar({ onSubmit }) {
   return (
     <div>
       <header onSubmit={handleSearchSubmit}>
-        <form>
+        <form className={s.form}>
           <input
+            className={s.input}
             type="text"
             id="search-input"
             name="searchQuery"
@@ -30,9 +33,46 @@ export default function SearchBar({ onSubmit }) {
             autofocus
             placeholder="Search images and photos"
           />
-          <button type="submit">Search</button>
+          <button className={s.button} type="submit">
+            Search
+          </button>
         </form>
       </header>
     </div>
   );
 }
+// import { Field, Form, Formik } from "formik";
+// import toast from "react-hot-toast";
+
+// export default function SearchBar({ setQuery }) {
+//   const initialValues = {
+//     query: "",
+//   };
+//   const handleSubmit = (values, options) => {
+//     const searchFormat = values.query.trim().toLowerCase();
+//     if (!searchFormat) {
+//       toast.error("Please enter a search query.");
+//       return;
+//     }
+//     setQuery(searchFormat);
+//     options.resetForm();
+//   };
+//   return (
+//     <>
+//       <header>
+//         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+//           <Form>
+//             <Field
+//               type="text"
+//               name="search"
+//               autocomplete="off"
+//               autofocus
+//               placeholder="Search images and photos"
+//             />
+//             <button type="submit">Search</button>
+//           </Form>
+//         </Formik>
+//       </header>
+//     </>
+//   );
+// }

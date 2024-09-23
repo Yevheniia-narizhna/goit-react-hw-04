@@ -6,26 +6,29 @@ import ImageGallery from "./ImageGallery/ImageGallery";
 import toast, { Toaster } from "react-hot-toast";
 import ImageModal from "./ImageModal/ImageModal";
 import Loader from "./Loader/Loader";
+import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn";
+import ErrorMessage from "./ErrorMessage/ErrorMessage";
 
 function App() {
-  const [pictures, setPictures] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
-  const [selectedPicture, setSelectedPicture] = useState("");
-  const [loadingMore, setLoadingMore] = useState(false);
+  const [pictures, setPictures] = useState([]); //Зберігання списку зображень//
+  const [isLoading, setIsLoading] = useState(false); //Для відображення контенту//
+  const [error, setError] = useState(false); //Для відображення помилки//
+  const [page, setPage] = useState(1); //Зберігання поточноі сторінки//
+  const [query, setQuery] = useState(""); //Для зберігання пошукового запиту//
+  const [selectedPicture, setSelectedPicture] = useState(""); //Для зберігання вибраного зображення для модалки//
+  const [loadingMore, setLoadingMore] = useState(false); //Для відображення додаткового контенту//
 
   useEffect(() => {
     const getData = async () => {
       try {
-        setIsError(false);
+        setError(false);
         setIsLoading(true);
         const data = await fetchPictures(query, page);
         setIsLoading(false);
         setPictures((prev) => [...prev, ...data.results]);
       } catch {
-        setIsError(true);
+        setError(true);
+        setError("Failed to fetch images. Please try again.");
       } finally {
         setIsLoading(false);
         setLoadingMore(false);
@@ -42,11 +45,13 @@ function App() {
     setLoadingMore(true);
     setPage((prev) => prev + 1);
   };
+
   const handleSearchSubmit = (query) => {
     setQuery(query);
     setPage(1);
     setPictures([]);
-  };
+  }; // Видалення минулих картинок, сторінки при сабміті//
+
   const handleCloseModal = () => {
     setSelectedPicture(null);
   };
@@ -60,9 +65,13 @@ function App() {
       {!!pictures.length && (
         <ImageGallery pictures={pictures} onPictureClick={handlePictureClick} />
       )}
-      {isLoading && <h2>Loading...</h2>}
-      {isError && <h2>Something went wrong</h2>}
-      <button onClick={handleLoadMore}>Load more</button>
+      {isLoading && !loadingMore && <Loader />}
+      {error && <ErrorMessage message={error} />}
+      {loadingMore ? (
+        <Loader />
+      ) : (
+        pictures.length > 0 && <LoadMoreBtn onClick={handleLoadMore} />
+      )}
       {selectedPicture && (
         <ImageModal picture={selectedPicture} onClose={handleCloseModal} />
       )}
