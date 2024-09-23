@@ -7,7 +7,7 @@ export default function ImageGallery({ pictures, onPictureClick }) {
         <div
           className={s.galleryItem}
           key={picture.id}
-          onClick={() => onImageClick(picture)}
+          onClick={() => onPictureClick(picture)}
         >
           <ImageCard picture={picture} onClick={onPictureClick} />
         </div>

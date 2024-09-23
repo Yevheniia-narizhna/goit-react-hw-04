@@ -14,8 +14,9 @@
   width: 100%;
   padding-bottom: 75%;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: #f0f0f0;
+  border: 1px solid rgb(36, 36, 36);
 }
 
 .galleryItem img {

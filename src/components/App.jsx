@@ -20,6 +20,7 @@ function App() {
 
   useEffect(() => {
     const getData = async () => {
+      if (!query) return;
       try {
         setError(false);
         setIsLoading(true);
