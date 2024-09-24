@@ -20,8 +20,8 @@ export default function SearchBar({ onSubmit }) {
   };
   return (
     <div>
-      <header onSubmit={handleSearchSubmit}>
-        <form className={s.form}>
+      <header>
+        <form className={s.form} onSubmit={handleSearchSubmit}>
           <input
             className={s.input}
             type="text"
